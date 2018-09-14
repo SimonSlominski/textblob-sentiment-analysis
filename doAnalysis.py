@@ -1,7 +1,15 @@
 """
-Author: Stephen W. Thomas
+I modified the script to work with Python 3.
+Hint: if you install all libraries and you get an error: 
+"Matplotlib Python is not installed as a framework" 
+use the following code in the terminal:
 
-Perform sentiment analysis using TextBlob to do the heavy lifting.
+echo "backend: TkAgg" >> ~ / .matplotlib / matplotlibrc
+
+Requirements:
+textblob
+numpy
+matplotlib
 """
 
 # The main package to help us with our text analysis
@@ -51,9 +59,10 @@ def strip_non_ascii(string):
 # clean:    The preprocessed string of characters
 # TextBlob: The TextBlob object, created from the 'clean' string
 
-with open('newtwitter.csv', 'rb') as csvfile:
+with open('newtwitter.small.csv', encoding = "ISO-8859-1") as csvfile:
     reader = csv.reader(csvfile, delimiter=',')
-    reader.next()
+    next(reader)
+
     for row in reader:
 
         tweet= dict()
@@ -135,25 +144,26 @@ tweets_sorted = sorted(tweets, key=lambda k: k['polarity'])
 
 # First, print out a few example tweets from each sentiment category.
 
-print "\n\nTOP NEGATIVE TWEETS"
+print("\n\nTOP NEGATIVE TWEETS")
 negative_tweets = [d for d in tweets_sorted if d['sentiment'] == 'negative']
 for tweet in negative_tweets[0:100]:
-    print "id=%d, polarity=%.2f, clean=%s" % (tweet['id'], tweet['polarity'], tweet['clean'])
+    print("id=%d, polarity=%.2f, clean=%s" % (tweet['id'], tweet['polarity'], tweet['clean']))
 
-print "\n\nTOP POSITIVE TWEETS"
+print("\n\nTOP POSITIVE TWEETS")
 positive_tweets = [d for d in tweets_sorted if d['sentiment'] == 'positive']
 for tweet in positive_tweets[-100:]:
-    print "id=%d, polarity=%.2f, clean=%s" % (tweet['id'], tweet['polarity'], tweet['clean'])
+    print("id=%d, polarity=%.2f, clean=%s" % (tweet['id'], tweet['polarity'], tweet['clean']))
 
-print "\n\nTOP NEUTRAL TWEETS"
+print("\n\nTOP NEUTRAL TWEETS")
 neutral_tweets = [d for d in tweets_sorted if d['sentiment'] == 'neutral']
 for tweet in neutral_tweets[0:500]:
-    print "id=%d, polarity=%.2f, clean=%s" % (tweet['id'], tweet['polarity'], tweet['clean'])
+    print("id=%d, polarity=%.2f, clean=%s" % (tweet['id'], tweet['polarity'], tweet['clean']))
 
 
 # Next, create some plots
 
 # A histogram of the scores.
+
 x = [d['polarity'] for d in tweets_sorted]
 num_bins = 21
 n, bins, patches = plt.hist(x, num_bins, normed=1, facecolor='green', alpha=0.5)
